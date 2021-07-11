@@ -2,13 +2,26 @@ log = console.log;
 
 function checkCashRegister(price, cash, cid) {
   var changeRequested = cash - price;
-  // Edge Case, not enough money in drawer
+  //! --------------
+  //!  Edge Cases
+  //! --------------
+  // Edge Case #1, not enough money in drawer
   var totalChange = cid.reduce((total, [_, amount]) => total + amount, 0);
-  if (totalChange < changeRequested)
+
+  // Edge Case, not enough coins
+  var totalCoins = cid.filter((option, i) => i < 4).reduce((total, [_, amount]) => total + amount, 0);
+  var coinsRequested = changeRequested % 1;
+
+  // Include both edge cases to return insufficent funds
+  if (totalChange < changeRequested || totalCoins < coinsRequested)
     return {
       status: 'INSUFFICIENT_FUNDS',
       change: [],
     };
+  //! ------------------
+  //!  END: Edge Cases
+  //! ------------------
+
   var n = changeRequested;
   let change = [];
 
@@ -43,7 +56,7 @@ function checkCashRegister(price, cash, cid) {
   };
 }
 
-a = checkCashRegister(19.5, 20, [
+checkCashRegister(19.5, 20, [
   ['PENNY', 0.01],
   ['NICKEL', 0],
   ['DIME', 0],
@@ -54,6 +67,5 @@ a = checkCashRegister(19.5, 20, [
   ['TWENTY', 0],
   ['ONE HUNDRED', 0],
 ]);
-log(a);
 
 module.exports = checkCashRegister;
