@@ -28,8 +28,9 @@ function checkCashRegister(price, cash, cid) {
   const f = (amt, desc, cid) => {
     let [_, max] = cid.find(([opDesc, _]) => opDesc === desc);
     let x = Math.min(max, Math.floor(n / amt) * amt);
-    if (x) {
-      change.push([desc, x]);
+    if (x || changeRequested == totalChange) {
+      if (changeRequested == totalChange) change.unshift([desc, x]);
+      else change.push([desc, x]);
       n -= x;
       n = n.toFixed(2);
     }
